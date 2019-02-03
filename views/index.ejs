@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang='en'>
+    <head>
+        <meta charset='UTF-8'/>
+        <meta name='viewport' 
+            content='width=device-width, initial-scale=1.0, maximum-scale=1.0' />
+        <title>Home Temperature</title>
+        <link rel="icon" type="image/png" href="images/favicon.png">
+        <link href="https://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet">
+        <link rel='stylesheet' href='style.css'/>
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.min.js"></script>
+        <script>
+            var tempData = {};
+            <% devices.forEach(function(device) { %>
+                tempData["<%= device.name %>"] = {
+                    "temp_history": <%- JSON.stringify(device.temp_history) %>, 
+                    "latest_entry_num": <%= device.latest_entry_num %>,
+                    "color": "<%= device.color %>"
+                };
+            <% }); %>
+            var MAX_ENTRIES = <%= max_entries %>;
+            var MAX_HISTORY_MS = <%= max_history_ms %>;
+        </script>
+        <script src="script.js"></script>
+        <style>
+            <% devices.forEach(function(device) { %>
+                #<%= device.name %>-container {
+                    border: 3px solid <%= device.color %>
+                }
+            <% }); %>
+        </style>
+    </head>
+    <body>
+        <div class='header-container'>
+            <div class='header'>
+                <div class='logo'><img class='logo-img' src='images/cold.svg'></div>
+                <div class='title'> Home Temperature </div>
+                <div class='far'>F</div>
+                <div class='switch'>
+                    <input id="is-c" class="toggle" type="checkbox">
+                    <label for="is-c"></label>
+                </div>
+                <div class='cel'>C</div>
+            </div>
+        </div>
+        <div class='temp-grid-container'>
+            <div class='temp-grid'>
+                <% devices.forEach(function(device) { %>
+                    <div class='temp'>
+                        <div class='location'><%= device.name %></div>
+                        <div class='temp-value-container' id='<%= device.name %>-container'>
+                            <div class='temp-value' id='<%= device.name %>'>
+                                <% if(device.temp_history.length > 0) { %>
+                                    <%= (device.temp_history[device.temp_history.length - 1].temp*9/5 + 32).toFixed(1) %>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+        </div>
+        <div class='chart-container'>
+            <div class='chart'>
+                <canvas id="tempChart"></canvas>
+            </div>
+        </div>
+        <div class='footer-container'>
+            <div>Icons made by <a href="https://www.freepik.com/" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" 			    title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" 			    title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+        </div>
+    </body>
+</html>

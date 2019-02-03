@@ -1,0 +1,12 @@
+{
+  "name": "temp_network",
+  "version": "1.0.0",
+  "description": "Collect temperature readings",
+  "main": "app.js",
+  "dependencies": {
+    "dbus-native": "^0.4.0",
+    "ejs": "^2.6.1",
+    "express": "^4.16.4",
+    "socket.io": "^2.2.0"
+  }
+}
